@@ -1,17 +1,32 @@
 package com.nasa.probesystem.domain.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+
+@Entity
 public class Probe {
-  private int positionX;
-  private int positionY;
-  private Planet currentPlanet;
-  private Direction faceDirection;
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  int id;
+
+  @NotBlank int positionX;
+  @NotBlank int positionY;
+  // TODO: add join key here
+  //  @NotBlank Planet currentPlanet;
+  @NotBlank Direction faceDirection;
 
   public Probe(int positionX, int positionY, Planet currentPlanet, Direction faceDirection) {
     this.positionX = positionX;
     this.positionY = positionY;
-    this.currentPlanet = currentPlanet;
+    // this.currentPlanet = currentPlanet;
     this.faceDirection = faceDirection;
   }
+
+  public Probe() {}
 
   public void setPositionX(int positionX) {
     this.positionX = positionX;
@@ -21,9 +36,9 @@ public class Probe {
     this.positionY = positionY;
   }
 
-  public void setCurrentPlanet(Planet currentPlanet) {
-    this.currentPlanet = currentPlanet;
-  }
+  //  public void setCurrentPlanet(Planet currentPlanet) {
+  //    this.currentPlanet = currentPlanet;
+  //  }
 
   public void setFaceDirection(Direction faceDirection) {
     this.faceDirection = faceDirection;
@@ -37,9 +52,9 @@ public class Probe {
     return positionY;
   }
 
-  public Planet getCurrentPlanet() {
-    return currentPlanet;
-  }
+  //  public Planet getCurrentPlanet() {
+  //    return currentPlanet;
+  //  }
 
   public Direction getFaceDirection() {
     return faceDirection;
@@ -52,8 +67,8 @@ public class Probe {
         + positionX
         + ", positionY="
         + positionY
-        + ", currentPlanet="
-        + currentPlanet
+        // + ", currentPlanet="
+        // + currentPlanet
         + ", faceDirection="
         + faceDirection
         + '}';
