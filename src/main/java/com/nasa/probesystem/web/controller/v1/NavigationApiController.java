@@ -1,11 +1,6 @@
 package com.nasa.probesystem.web.controller.v1;
 
 import com.nasa.probesystem.domain.model.Planet;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,24 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/navigation")
-public class NavigationController {
+public class NavigationApiController implements NavigationApi {
 
-  @Operation(
-      summary = "Add a new planet which a probe can navigate",
-      description = "Add a new planet")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Successful operation",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = Planet.class))
-            }),
-        // TODO: add more information about return code after implements the rule
-        // @ApiResponse(responseCode = "405", description = "")
-      })
   @PostMapping(value = "/planet", consumes = "application/json", produces = "application/json")
   public ResponseEntity<Planet> createPlanet(@RequestBody Planet planet) {
     try {
