@@ -1,32 +1,57 @@
 package com.nasa.probesystem.domain.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+
+@Entity
 public class Planet {
-  private int maximumX;
-  private int maximumY;
 
-  public Planet(int maximumX, int maximumY) {
-    this.maximumX = maximumX;
-    this.maximumY = maximumY;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  int id;
+
+  @NotBlank String planetName;
+  @NotBlank int maxX;
+  @NotBlank int maxY;
+
+  public Planet() {}
+
+  public Planet(String planetName, int maxX, int maxY) {
+    this.maxX = maxX;
+    this.maxY = maxY;
+    this.planetName = planetName;
   }
 
-  public void setMaximumY(int maximumY) {
-    this.maximumY = maximumY;
+  public void setMaxY(int maxY) {
+    this.maxY = maxY;
   }
 
-  public void setMaximumX(int maximumX) {
-    this.maximumX = maximumX;
+  public void setMaxX(int maxX) {
+    this.maxX = maxX;
   }
 
-  public int getMaximumX() {
-    return maximumX;
+  public int getMaxX() {
+    return maxX;
   }
 
-  public int getMaximumY() {
-    return maximumY;
+  public int getMaxY() {
+    return maxY;
+  }
+
+  public String getPlanetName() {
+    return planetName;
+  }
+
+  public Planet setPlanetName(String planetName) {
+    this.planetName = planetName;
+    return this;
   }
 
   @Override
   public String toString() {
-    return "Planet {" + "maximumX=" + maximumX + ", maximumY=" + maximumY + '}';
+    return "Planet {" + "maxX = " + maxX + ", maxY = " + maxY + '}';
   }
 }
