@@ -16,4 +16,6 @@ import lombok.NoArgsConstructor;
 public class ProbeSystemResponse {
   private Planet planet;
   private Probe probe;
+  private int planetId;
+  private int probeId;
 }

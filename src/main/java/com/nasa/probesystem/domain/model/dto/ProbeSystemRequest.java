@@ -17,6 +17,6 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProbeSystemRequest {
   private Planet planet;
-  private List<Probe> probes;
+  private Probe probe;
   private List<Command> commands;
 }
