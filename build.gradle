@@ -23,7 +23,7 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
     annotationProcessor group: 'org.projectlombok', name: 'lombok'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'2.5.6'
-    runtimeOnly group: 'com.h2database', name:'h2', version:'1.4.200'
+    runtimeOnly group: 'com.h2database', name:'h2';
     compileOnly group: 'org.projectlombok', name: 'lombok', 'version': '1.18.22'
 }
 
