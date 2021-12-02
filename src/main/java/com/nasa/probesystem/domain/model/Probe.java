@@ -1,76 +1,124 @@
 package com.nasa.probesystem.domain.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Probe {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  int id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "probeId")
+  private int id;
 
-  @NotBlank int positionX;
-  @NotBlank int positionY;
-  // TODO: add join key here
-  //  @NotBlank Planet currentPlanet;
-  @NotBlank Direction faceDirection;
+  @Column(name = "positionX")
+  private int positionX;
 
-  public Probe(int positionX, int positionY, Planet currentPlanet, Direction faceDirection) {
-    this.positionX = positionX;
-    this.positionY = positionY;
-    // this.currentPlanet = currentPlanet;
-    this.faceDirection = faceDirection;
-  }
+  @Column(name = "positionY")
+  private int positionY;
+
+  @Column(name = "faceDirection")
+  private Direction faceDirection;
+
+  @Column(name = "probeName", nullable = false, unique = true)
+  private String probeName;
+
+  @ManyToOne
+  @JoinColumn(name = "planetId")
+  private Planet planet;
 
   public Probe() {}
 
-  public void setPositionX(int positionX) {
-    this.positionX = positionX;
+  @Override
+  public String toString() {
+    return "Probe{"
+        + "id="
+        + id
+        + ", positionX="
+        + positionX
+        + ", positionY="
+        + positionY
+        + ", faceDirection="
+        + faceDirection
+        + ", probeName='"
+        + probeName
+        + '\''
+        + ", planet="
+        + planet
+        + '}';
   }
 
-  public void setPositionY(int positionY) {
-    this.positionY = positionY;
+  public int getId() {
+    return id;
   }
 
-  //  public void setCurrentPlanet(Planet currentPlanet) {
-  //    this.currentPlanet = currentPlanet;
-  //  }
-
-  public void setFaceDirection(Direction faceDirection) {
-    this.faceDirection = faceDirection;
+  public Probe setId(int id) {
+    this.id = id;
+    return this;
   }
 
   public int getPositionX() {
     return positionX;
   }
 
+  public Probe setPositionX(int positionX) {
+    this.positionX = positionX;
+    return this;
+  }
+
   public int getPositionY() {
     return positionY;
   }
 
-  //  public Planet getCurrentPlanet() {
-  //    return currentPlanet;
-  //  }
+  public Probe setPositionY(int positionY) {
+    this.positionY = positionY;
+    return this;
+  }
 
   public Direction getFaceDirection() {
     return faceDirection;
   }
 
-  @Override
-  public String toString() {
-    return "Probe {"
-        + "positionX="
-        + positionX
-        + ", positionY="
-        + positionY
-        // + ", currentPlanet="
-        // + currentPlanet
-        + ", faceDirection="
-        + faceDirection
-        + '}';
+  public Probe setFaceDirection(Direction faceDirection) {
+    this.faceDirection = faceDirection;
+    return this;
+  }
+
+  public String getProbeName() {
+    return probeName;
+  }
+
+  public Probe setProbeName(String probeName) {
+    this.probeName = probeName;
+    return this;
+  }
+
+  public Planet getPlanet() {
+    return planet;
+  }
+
+  public Probe setPlanet(Planet planet) {
+    this.planet = planet;
+    return this;
+  }
+
+  public Probe(
+      int id,
+      int positionX,
+      int positionY,
+      Direction faceDirection,
+      String probeName,
+      Planet planet) {
+    this.id = id;
+    this.positionX = positionX;
+    this.positionY = positionY;
+    this.faceDirection = faceDirection;
+    this.probeName = probeName;
+    this.planet = planet;
   }
 }
