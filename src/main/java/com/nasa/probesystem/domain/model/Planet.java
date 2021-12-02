@@ -1,29 +1,35 @@
 package com.nasa.probesystem.domain.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
 
-@Entity
+@Entity(name = "planet")
 public class Planet {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  int id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "planetId")
+  private int id;
 
-  @NotBlank String planetName;
-  @NotBlank int maxX;
-  @NotBlank int maxY;
+  @Column(name = "planetName", length = 99, nullable = false, unique = true)
+  private String planetName;
 
-  public Planet() {}
+  @Column(name = "maxX", nullable = false)
+  private int maxX;
+
+  @Column(name = "maxY", nullable = false)
+  private int maxY;
 
   public Planet(String planetName, int maxX, int maxY) {
     this.maxX = maxX;
     this.maxY = maxY;
     this.planetName = planetName;
   }
+
+  public Planet() {}
 
   public void setMaxY(int maxY) {
     this.maxY = maxY;
@@ -50,8 +56,27 @@ public class Planet {
     return this;
   }
 
+  public int getId() {
+    return id;
+  }
+
+  public Planet setId(int id) {
+    this.id = id;
+    return this;
+  }
+
   @Override
   public String toString() {
-    return "Planet {" + "maxX = " + maxX + ", maxY = " + maxY + '}';
+    return "Planet{"
+        + "id="
+        + id
+        + ", planetName='"
+        + planetName
+        + '\''
+        + ", maxX="
+        + maxX
+        + ", maxY="
+        + maxY
+        + '}';
   }
 }
