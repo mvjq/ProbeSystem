@@ -31,8 +31,4 @@ public class ProbeNavigationService {
     dataAccessService.saveProbe(probe);
     return response;
   }
-
-  public ProbeSystemResponse updatedProbeNavigation(int probeId, ProbeSystemRequest request) {
-    return null;
-  }
 }

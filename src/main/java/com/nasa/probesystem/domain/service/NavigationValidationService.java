@@ -63,13 +63,4 @@ public class NavigationValidationService implements NavigationValidation {
     }
     return Boolean.TRUE;
   }
-
-  private Boolean validateProbeCollision(Probe probe, Probe probeOnPlanet) {
-    if (probe.getPositionX() == probeOnPlanet.getPositionX()
-        || probe.getPositionY() == probeOnPlanet.getPositionY()) {
-      log.info("A collision between probes happened");
-      return Boolean.FALSE;
-    }
-    return Boolean.TRUE;
-  }
 }
