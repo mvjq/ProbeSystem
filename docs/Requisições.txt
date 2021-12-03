@@ -1,0 +1,66 @@
+
+## Criando um planeta
+curl -X 'POST' \
+  'http://localhost:8080/api/v1/planet' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "planet": {
+    "planetName": "Mars",
+    "maxX": 5,
+    "maxY": 5
+  }
+}'
+
+## Buscando esse planeta
+curl -X 'GET' \
+  'http://localhost:8080/api/v1/planet/planet/1' \
+  -H 'accept: */*'
+ 
+
+## Criando um probe que vai pousar no planeta acima
+curl -X 'POST' \
+  'http://localhost:8080/api/v1/probeNavigation' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "probe": {
+    "positionX": 0,
+    "positionY": 0,
+    "faceDirection": "N",
+    "probeName": "string",
+    "planet": {
+         "id": 1,
+         "planetName": "Mars",
+         "maxX": 5,
+         "maxY": 5
+       }
+  },
+  "commands": [
+    "L", "R", "M"
+  ]
+}'
+
+## agora um probe que tenta sair do planeta acima
+## chegando na borda do planeta ele não ultrapassa ela
+curl -X 'POST' \
+  'http://localhost:8080/api/v1/probeNavigation' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "probe": {
+    "positionX": 0,
+    "positionY": 0,
+    "faceDirection": "N",
+    "probeName": "ProbeName",
+     "planet": {
+          "id": 1,
+          "planetName": "Mars",
+          "maxX": 5,
+          "maxY": 5
+        }
+  },
+  "commands": [
+    "M", "M", "M", "M", "M", "M","M", "M", "M", "M", "M", "M", "M", "M", "M", "M", "M"
+  ]
+}'

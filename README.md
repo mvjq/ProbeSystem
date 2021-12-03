@@ -11,13 +11,14 @@ A descrição do problem se encontra neste [link](https://gist.github.com/elo7-d
 - Quando uma sonda pousar num planeta e se movimentar, caso um movimento a frente (Comando M) faça ela sair dos limites do planeta, ela nunca vai ultrapassar esse limite e sua posição sempre vai ser a borda do planeta.
 - Foi utilizado um banco em memória (H2) como camada de persistência.
 - Um probe só consegue navegar num planeta cadastrado/já existente.
+- Atualmente o sistema não suporta checagem de colisões entre as sondas.
 
 ### Documentação
 
 #### Swagger
 
-O swagger contendo informação sobre os endpoints e schema se encontra mapeado na URL: [Swagger](http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config)
-
+O swagger contendo informação sobre os endpoints e schema se encontra mapeado na URL: [Swagger](http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config). 
+Você pode ver exemplos de requisições no arquivo [Requisições.txt](./docs/Requisições.txt)
 #### Modelagem do Sistema
 
 O sistema foi modelado da seguinte forma
@@ -49,4 +50,4 @@ O sistema foi modelado da seguinte forma
 ##### Diagrama do Sistema
 
 ![Diagrama Probe System](./docs/images/ProbeSystem.jpg "Diagrama do ProbeSystem")
-
+2
