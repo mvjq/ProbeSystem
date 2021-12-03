@@ -5,7 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "planet")
 public class Planet {
 
@@ -22,14 +28,6 @@ public class Planet {
 
   @Column(name = "maxY", nullable = false)
   private int maxY;
-
-  public Planet(String planetName, int maxX, int maxY) {
-    this.maxX = maxX;
-    this.maxY = maxY;
-    this.planetName = planetName;
-  }
-
-  public Planet() {}
 
   public void setMaxY(int maxY) {
     this.maxY = maxY;

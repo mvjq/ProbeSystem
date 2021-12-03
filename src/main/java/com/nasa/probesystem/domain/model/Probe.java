@@ -7,7 +7,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Probe {
 
@@ -31,8 +37,6 @@ public class Probe {
   @ManyToOne
   @JoinColumn(name = "planetId")
   private Planet planet;
-
-  public Probe() {}
 
   @Override
   public String toString() {
@@ -105,20 +109,5 @@ public class Probe {
   public Probe setPlanet(Planet planet) {
     this.planet = planet;
     return this;
-  }
-
-  public Probe(
-      int id,
-      int positionX,
-      int positionY,
-      Direction faceDirection,
-      String probeName,
-      Planet planet) {
-    this.id = id;
-    this.positionX = positionX;
-    this.positionY = positionY;
-    this.faceDirection = faceDirection;
-    this.probeName = probeName;
-    this.planet = planet;
   }
 }
