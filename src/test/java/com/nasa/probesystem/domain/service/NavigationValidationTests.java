@@ -2,16 +2,17 @@ package com.nasa.probesystem.domain.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.nasa.probesystem.domain.model.Direction;
 import com.nasa.probesystem.domain.model.Planet;
 import com.nasa.probesystem.domain.model.Probe;
 import com.nasa.probesystem.repository.PlanetRepository;
-import java.util.List;
-import java.util.Optional;
+import com.nasa.probesystem.repository.ProbeRepository;
+import com.nasa.probesystem.util.TestUtils;
+import javax.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -24,25 +25,27 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class NavigationValidationTests {
 
   private PlanetRepository planetRepositoryMock = mock(PlanetRepository.class);
+  private ProbeRepository probeRepositoryMock = mock(ProbeRepository.class);
   private NavigationValidationService underTest =
-      new NavigationValidationService(planetRepositoryMock);
+      new NavigationValidationService(
+          new DataAccessService(probeRepositoryMock, planetRepositoryMock));
 
   @Test
   void validPlanet_shouldReturnTrue() {
-    Planet planet = givenGetValidPlanet("Mars", 5, 5, 1);
+    Planet planet = TestUtils.givenGetValidPlanet("Mars", 5, 5, 1, planetRepositoryMock);
     assertTrue(underTest.validatePlanet(planet));
   }
 
   @Test
-  void emptyPlanet_shouldReturnFalse() {
+  void emptyPlanet_shouldThrowException() {
     Planet emptyPlanet = Planet.builder().build();
-    assertEquals(Boolean.FALSE, underTest.validatePlanet(emptyPlanet));
+    assertThrows(EntityNotFoundException.class, () -> underTest.validatePlanet(emptyPlanet));
   }
 
   @Test
   void validProbe_shouldReturnTrue() {
-    Planet planet = givenGetValidPlanet("Mars", 5, 5, 1);
-    Probe probe = givenGetValidProbe("mars rover", 0, 0, Direction.N, planet);
+    Planet planet = TestUtils.givenGetValidPlanet("Mars", 5, 5, 1, planetRepositoryMock);
+    Probe probe = TestUtils.givenGetValidProbe("mars rover", 0, 0, Direction.N, planet);
     var flag = underTest.validateProbe(probe);
     assertTrue(flag);
   }
@@ -55,66 +58,39 @@ class NavigationValidationTests {
 
   @Test
   void validProbePositionInPlanet_shouldReturnTrue() throws Exception {
-    Planet planet = givenGetValidPlanet("Mars", 5, 5, 1);
-    Probe probe = givenGetValidProbe("mars roover", 0, 0, Direction.N, planet);
+    Planet planet = TestUtils.givenGetValidPlanet("Mars", 5, 5, 1, planetRepositoryMock);
+    Probe probe = TestUtils.givenGetValidProbe("mars roover", 0, 0, Direction.N, planet);
     assertTrue(underTest.validateProbePositionInPlanet(probe, planet));
   }
 
   @Test
   void invalidProbePositionInPlanet_ProbeIsOutsideOfPlanetLimits_shouldReturnFalse() {
-    Planet planet = givenGetValidPlanet("Mars", 5, 5, 1);
-    Probe probe = givenGetValidProbe("mars roover", 10, 10, Direction.N, planet);
+    Planet planet = TestUtils.givenGetValidPlanet("Mars", 5, 5, 1, planetRepositoryMock);
+    Probe probe = TestUtils.givenGetValidProbe("mars roover", 10, 10, Direction.N, planet);
     assertFalse(underTest.validateProbePositionInPlanet(probe, planet));
   }
 
   @Test
   void invalidProbePositionInPlanet_CollisionWithProbes_shouldReturnFalse_1() {
-    Planet planet = givenGetValidPlanet("Mars", 10, 10, 1);
-    injectMultipleProbesInRepository(planet);
-    Probe probe = givenGetValidProbe("mars roover #5", 0, 0, Direction.E, planet);
+    Planet planet = TestUtils.givenGetValidPlanet("Mars", 10, 10, 1, planetRepositoryMock);
+    TestUtils.injectMultipleProbesInRepository(planet, planetRepositoryMock);
+    Probe probe = TestUtils.givenGetValidProbe("mars roover #5", 0, 0, Direction.E, planet);
     assertFalse(underTest.validateProbePositionInPlanet(probe, planet));
   }
 
   @Test
   void invalidProbePositionInPlanet_CollisionWithProbes_shouldReturnFalse_2() {
-    Planet planet = givenGetValidPlanet("Mars", 10, 10, 1);
-    injectMultipleProbesInRepository(planet);
-    Probe probe = givenGetValidProbe("mars roover #5", 1, 2, Direction.E, planet);
+    Planet planet = TestUtils.givenGetValidPlanet("Mars", 10, 10, 1, planetRepositoryMock);
+    TestUtils.injectMultipleProbesInRepository(planet, planetRepositoryMock);
+    Probe probe = TestUtils.givenGetValidProbe("mars roover #5", 1, 2, Direction.E, planet);
     assertFalse(underTest.validateProbePositionInPlanet(probe, planet));
   }
 
   @Test
   void invalidProbePositionInPlanet_CollisionWithProbes_shouldReturnFalse_3() {
-    Planet planet = givenGetValidPlanet("Mars", 10, 10, 1);
-    injectMultipleProbesInRepository(planet);
-    Probe probe = givenGetValidProbe("mars roover #5", 3, 2, Direction.E, planet);
+    Planet planet = TestUtils.givenGetValidPlanet("Mars", 10, 10, 1, planetRepositoryMock);
+    TestUtils.injectMultipleProbesInRepository(planet, planetRepositoryMock);
+    Probe probe = TestUtils.givenGetValidProbe("mars roover #5", 3, 2, Direction.E, planet);
     assertFalse(underTest.validateProbePositionInPlanet(probe, planet));
-  }
-
-  private Planet givenGetValidPlanet(String name, int x, int y, int id) {
-    var planet = Planet.builder().planetName(name).maxX(x).maxY(y).id(id).build();
-    when(planetRepositoryMock.findById(planet.getId())).thenReturn(Optional.of(planet));
-    return planet;
-  }
-
-  private Probe givenGetValidProbe(
-      String name, int x, int y, Direction faceDirection, Planet planet) {
-    return Probe.builder()
-        .probeName(name)
-        .positionX(x)
-        .positionY(y)
-        .id(1)
-        .planet(planet)
-        .faceDirection(faceDirection)
-        .build();
-  }
-
-  private void injectMultipleProbesInRepository(Planet planet) {
-    var listProbes =
-        List.of(
-            givenGetValidProbe("mars roover #1", 0, 0, Direction.N, planet),
-            givenGetValidProbe("mars roover #2", 1, 2, Direction.N, planet),
-            givenGetValidProbe("mars roover #3", 2, 2, Direction.N, planet));
-    when(planetRepositoryMock.findAllProbesByplanetId(planet.getId())).thenReturn((listProbes));
   }
 }

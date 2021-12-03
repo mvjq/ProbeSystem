@@ -3,136 +3,125 @@ package com.nasa.probesystem.domain.service;
 import com.nasa.probesystem.domain.model.Command;
 import com.nasa.probesystem.domain.model.Planet;
 import com.nasa.probesystem.domain.model.Probe;
-import com.nasa.probesystem.repository.PlanetRepository;
-import com.nasa.probesystem.repository.ProbeRepository;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Slf4j
+@Service
 public class NavigationService implements Navigation {
+
   private final NavigationValidationService validationService;
-  private final PlanetRepository planetRepository;
-  private final ProbeRepository probeRepository;
 
-  public NavigationService(
-      final NavigationValidationService validationService,
-      final PlanetRepository planetRepository,
-      final ProbeRepository probeRepository) {
+  public NavigationService(final NavigationValidationService validationService) {
     this.validationService = validationService;
-    this.planetRepository = planetRepository;
-    this.probeRepository = probeRepository;
   }
 
   @Override
-  public Planet navigate(Planet planet, Probe probe, final List<Command> commands) {
+  public Probe navigate(Planet planet, Probe probe, final List<Command> commands) throws Exception {
+    log.info("Probe {} Planet {} Commands {} ", probe, planet, commands);
 
-    /*
-    Vou receber um planeta válido e vou pousar esse probe nele
-    esse pouso precisa ser validado,
-    Depois vou receber uma lista de comandos que eu vou movimentar o probe na direção
-    A cada movimento eu checo.
-    */
-    // TODO: melhorar isso e aplicar isso com operações de stream
-    if (validationService.validatedProbePositionInPlanet(probe, planet)) {
-      /*
-      Ok, eu validei que a posição do probe está dentro do planeta
-      validei também que eu naõ vou pousar em outro probe que tá no planeta (como eu vou buscar isso no banco?)
-       */
-      land(planet, probe);
-      applyCommands(planet, probe, commands);
+    if (validationService.validateProbe(probe) && validationService.validatePlanet(planet)) {
+      var landedPlanet = land(planet, probe);
+      var landedProbe = applyCommands(planet, probe, commands);
+      log.info(
+          "Probe {} landed in the planet {} and after the commands {} its in the position x:{} y:{}",
+          landedProbe,
+          landedPlanet,
+          commands,
+          probe.getPositionX(),
+          probe.getPositionY());
+
+      return landedProbe;
     }
-    
-    // TODO: implement error handling here
-
-    return new Planet("mars", 0, 1);
+    throw new Exception("Invalid probe Navigation");
   }
 
   @Override
-  public Planet land(Planet planet, Probe probe) {
-    log.info("Landing the probe {} on planet {}", probe, planet);
-    if (validationService.validatedProbePositionInPlanet(probe, planet)) {
+  public Planet land(Planet planet, Probe probe) throws Exception {
+    if (validationService.validateProbePositionInPlanet(probe, planet)) {
+      log.info("Landed probe {} on planet {}", probe, planet);
+      probe.setPlanet(planet);
       return planet;
     }
-    //TODO: implement error handling here
-    return null;
+    throw new Exception("Invalid landing of probe on planet {}");
   }
 
-  @Override
-  public Probe turn(Probe probe, Command command) {
-    log.info("Command {} to move forward probe {}", probe, command);
-    if (command.equals(Command.L)) {
-      probe.setFaceDirection(probe.getFaceDirection().getLeft());
-    } else if (command.equals(Command.R)) {
-      probe.setFaceDirection(probe.getFaceDirection().getRight());
+  private Probe applyCommands(Planet planet, Probe probe, final List<Command> commands)
+      throws Exception {
+    log.info("applying commands {} planet {} probe {}", commands, planet, probe);
+    for (Command command : commands) {
+      switch (command) {
+        case M:
+          moveForward(planet, probe);
+          break;
+        case L:
+        case R:
+          turn(probe, command);
+          break;
+        default:
+          log.info("Command {} not found", command);
+          throw new Exception("Command not found");
+      }
     }
-    // implement erro handling here
-    return null;
+    return probe;
   }
 
   @Override
-  public Probe moveForward(Planet planet, Probe probe) {
+  public Probe turn(Probe probe, Command command) throws Exception {
+    switch (command) {
+      case L:
+        probe.setFaceDirection(probe.getFaceDirection().getLeft());
+        break;
+      case R:
+        probe.setFaceDirection(probe.getFaceDirection().getRight());
+        break;
+      default:
+        log.info("Invalid probe turning direction command {}", command);
+        throw new Exception("Invalid probe command");
+    }
+    log.info("Probe {} turned with command {}", probe, command);
+    return probe;
+  }
 
+  @Override
+  public Probe moveForward(Planet planet, Probe probe) throws Exception {
     log.info("Moving forwarding planet:{} probe:{}", planet, probe);
     switch (probe.getFaceDirection()) {
       case N:
         // (x = x, y + 1)
-        moveXandY(probe, probe.getPositionX(), probe.getPositionY() + 1);
-        break;
+        return moveXandY(planet, probe, probe.getPositionX(), probe.getPositionY() + 1);
       case W:
         // (x - 1, y = y)
-        moveXandY(probe, probe.getPositionX() - 1, probe.getPositionY());
-        break;
+        return moveXandY(planet, probe, probe.getPositionX() - 1, probe.getPositionY());
       case S:
         // (x = x, y - 1)
-        moveXandY(probe, probe.getPositionX(), probe.getPositionY() - 1);
-        break;
+        return moveXandY(planet, probe, probe.getPositionX(), probe.getPositionY() - 1);
       case E:
         // (x + 1, y = y)
-        moveXandY(probe, probe.getPositionX() + 1, probe.getPositionY());
-        break;
+        return moveXandY(planet, probe, probe.getPositionX() + 1, probe.getPositionY());
       default:
-          // TODO: implemente erro handle here
-        log.info("Something went bad when moving the probe forward");
+        log.info("Something went wrong with the probe {} moving forward", probe);
+        throw new Exception("Invalid direction to move;");
     }
+  }
 
-    // validate position (if its not correct, we thrown an error (InvalidCommandPosition or
-    // something)
-    // if is valid, we save the probe
-    if (validationService.validatedProbePositionInPlanet(probe, planet)) {
-      // save and return the probe
+  private Probe moveXandY(Planet planet, Probe probe, int newX, int newY) throws Exception {
+    int oldProbeX = probe.getPositionX();
+    int oldProbeY = probe.getPositionY();
+    probe.setPositionX(newX);
+    probe.setPositionY(newY);
+    if (!validationService.validateProbePositionInPlanet(probe, planet)) {
+      probe.setPositionX(oldProbeX);
+      probe.setPositionY(oldProbeY);
       log.info(
-          "The probe {} move foward in the planet {} and stayed in a valid position",
-          probe,
-          planet);
-      return null;
+          "This movement is invalid in the current planet {} old position x:{} y:{} new position x:{} y:{}",
+          planet,
+          oldProbeX,
+          oldProbeY,
+          newX,
+          newY);
     }
-    // TODO implement erro handling here
-    log.info("Something went wrong with the probe {} moving forward", probe);
-    return null;
-  }
-
-  private Probe applyCommands(Planet planet, Probe probe, final List<Command> commands) {
-    log.info("applying commands {} planet {} probe {}", commands, planet, probe);
-    commands.forEach(
-        command -> {
-          switch (command) {
-            case M:
-              moveForward(planet, probe);
-              break;
-            case L:
-            case R:
-              turn(probe, command);
-              break;
-            default:
-              // TODO implement error handling here
-              log.info("Command now found, throwing InvalidCommandException");
-          }
-        });
     return probe;
-  }
-
-  private void moveXandY(Probe probe, int x, int y) {
-    probe.setPositionX(x);
-    probe.setPositionY(y);
   }
 }

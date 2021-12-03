@@ -1,5 +1,7 @@
 package com.nasa.probesystem.domain.service;
 
+import com.nasa.probesystem.domain.model.Planet;
+import com.nasa.probesystem.domain.model.Probe;
 import com.nasa.probesystem.domain.model.dto.ProbeSystemRequest;
 import com.nasa.probesystem.domain.model.dto.ProbeSystemResponse;
 import com.nasa.probesystem.repository.PlanetRepository;
@@ -16,15 +18,10 @@ import org.springframework.stereotype.Service;
 public class DataAccessService {
   private final ProbeRepository probeRepository;
   private final PlanetRepository planetRepository;
-  private final NavigationService navigationService;
 
-  public DataAccessService(
-      ProbeRepository probeRepository,
-      PlanetRepository planetRepository,
-      NavigationService navigationService) {
+  public DataAccessService(ProbeRepository probeRepository, PlanetRepository planetRepository) {
     this.probeRepository = probeRepository;
     this.planetRepository = planetRepository;
-    this.navigationService = navigationService;
   }
 
   @Transactional
@@ -102,19 +99,15 @@ public class DataAccessService {
         .orElseThrow(() -> new EntityNotFoundException("Probe not found"));
   }
 
-  public ProbeSystemResponse createProbeNavigation(ProbeSystemRequest request) throws Exception {
-    if (request.getProbe() == null
-        || request.getPlanet() == null
-        || request.getCommands() == null) {
-      throw new Exception("Request is not in a valid format");
-    }
-
-    var created =
-        navigationService.navigate(request.getPlanet(), request.getProbe(), request.getCommands());
-    return ProbeSystemResponse.builder().probe(probeRepository.saveAndFlush(created)).build();
+  public List<Probe> getProbesLandedInAPlanet(int planetId) {
+    return planetRepository.findAllProbesByplanetId(planetId);
   }
 
-  public ProbeSystemResponse updatedProbeNavigation(int probeId, ProbeSystemRequest request) {
-    return null;
+  public Planet savePlanet(Planet planet) {
+    return planetRepository.saveAndFlush(planet);
+  }
+
+  public Probe saveProbe(Probe probe) {
+    return probeRepository.saveAndFlush(probe);
   }
 }

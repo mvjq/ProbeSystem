@@ -2,7 +2,6 @@ package com.nasa.probesystem.domain.service;
 
 import com.nasa.probesystem.domain.model.Planet;
 import com.nasa.probesystem.domain.model.Probe;
-import com.nasa.probesystem.repository.PlanetRepository;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,10 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class NavigationValidationService implements NavigationValidation {
 
-  private final PlanetRepository planetRepository;
+  private final DataAccessService dataAccessService;
 
-  public NavigationValidationService(PlanetRepository planetRepository) {
-    this.planetRepository = planetRepository;
+  public NavigationValidationService(DataAccessService dataAccessService) {
+    this.dataAccessService = dataAccessService;
   }
 
   @Override
@@ -30,8 +29,8 @@ public class NavigationValidationService implements NavigationValidation {
   @Override
   public Boolean validatePlanet(Planet planet) {
 
-    var found = planetRepository.findById(planet.getId());
-    if (found.isEmpty()
+    var found = dataAccessService.getPlanet(planet.getId()).getPlanet();
+    if (found == null
         || planet.getPlanetName() == null
         || planet.getMaxX() < 0
         || planet.getMaxY() < 0) {
@@ -45,11 +44,13 @@ public class NavigationValidationService implements NavigationValidation {
 
   @Override
   public Boolean validateProbePositionInPlanet(Probe probe, Planet planet) {
-    var validPlanet = planetRepository.findById(planet.getId()).orElse(null);
+    var validPlanet = dataAccessService.getPlanet(planet.getId()).getPlanet();
     if (validPlanet == null) return Boolean.FALSE;
 
-    var listProbes = planetRepository.findAllProbesByplanetId(validPlanet.getId());
-    if (!validateCollisionProbes(probe, listProbes) || !validateXandYOnPlanet(probe, planet)) {
+    var listProbes = dataAccessService.getProbesLandedInAPlanet(validPlanet.getId());
+    if (listProbes == null
+        || !validateCollisionProbes(probe, listProbes)
+        || !validateXandYOnPlanet(probe, planet)) {
       log.info("The probe {} cant move or land in the planet {}", probe, planet);
       return Boolean.FALSE;
     }
