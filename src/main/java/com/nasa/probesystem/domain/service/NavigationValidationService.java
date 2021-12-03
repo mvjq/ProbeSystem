@@ -15,9 +15,8 @@ public class NavigationValidationService implements NavigationValidation {
   private final PlanetRepository planetRepository;
 
   public NavigationValidationService(
-      PlanetRepository planetRepository, ProbeRepository probeRepository) {
+      PlanetRepository planetRepository) {
     this.planetRepository = planetRepository;
-    this.probeRepository = probeRepository;
   }
 
   @Override

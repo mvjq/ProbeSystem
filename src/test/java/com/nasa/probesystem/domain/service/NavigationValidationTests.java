@@ -25,9 +25,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class NavigationValidationTests {
 
   private PlanetRepository planetRepositoryMock = mock(PlanetRepository.class);
-  private ProbeRepository probeRepositoryMock = mock(ProbeRepository.class);
   private NavigationValidationService underTest =
-      new NavigationValidationService(planetRepositoryMock, probeRepositoryMock);
+      new NavigationValidationService(planetRepositoryMock);
 
   @Test
   void validPlanet_shouldReturnTrue() {
