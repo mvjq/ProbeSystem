@@ -69,28 +69,4 @@ class NavigationValidationTests {
     Probe probe = TestUtils.givenGetValidProbe("mars roover", 10, 10, Direction.N, planet);
     assertFalse(underTest.validateProbePositionInPlanet(probe, planet));
   }
-
-  @Test
-  void invalidProbePositionInPlanet_CollisionWithProbes_shouldReturnFalse_1() {
-    Planet planet = TestUtils.givenGetValidPlanet("Mars", 10, 10, 1, planetRepositoryMock);
-    TestUtils.injectMultipleProbesInRepository(planet, planetRepositoryMock);
-    Probe probe = TestUtils.givenGetValidProbe("mars roover #5", 0, 0, Direction.E, planet);
-    assertFalse(underTest.validateProbePositionInPlanet(probe, planet));
-  }
-
-  @Test
-  void invalidProbePositionInPlanet_CollisionWithProbes_shouldReturnFalse_2() {
-    Planet planet = TestUtils.givenGetValidPlanet("Mars", 10, 10, 1, planetRepositoryMock);
-    TestUtils.injectMultipleProbesInRepository(planet, planetRepositoryMock);
-    Probe probe = TestUtils.givenGetValidProbe("mars roover #5", 1, 2, Direction.E, planet);
-    assertFalse(underTest.validateProbePositionInPlanet(probe, planet));
-  }
-
-  @Test
-  void invalidProbePositionInPlanet_CollisionWithProbes_shouldReturnFalse_3() {
-    Planet planet = TestUtils.givenGetValidPlanet("Mars", 10, 10, 1, planetRepositoryMock);
-    TestUtils.injectMultipleProbesInRepository(planet, planetRepositoryMock);
-    Probe probe = TestUtils.givenGetValidProbe("mars roover #5", 3, 2, Direction.E, planet);
-    assertFalse(underTest.validateProbePositionInPlanet(probe, planet));
-  }
 }

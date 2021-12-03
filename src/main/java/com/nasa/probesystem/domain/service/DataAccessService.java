@@ -98,10 +98,6 @@ public class DataAccessService {
         .orElseThrow(() -> new EntityNotFoundException("Probe not found"));
   }
 
-  public List<Probe> getProbesLandedInAPlanet(int planetId) {
-    return planetRepository.findAllProbesById(planetId);
-  }
-
   public Probe saveProbe(Probe probe) {
     return probeRepository.saveAndFlush(probe);
   }

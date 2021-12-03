@@ -81,24 +81,6 @@ class ProbeNavigationServiceTests {
   }
 
   @Test
-  void createProbeNavigation_withCollision_shouldFail() throws Exception {
-    Planet planet = TestUtils.givenGetValidPlanet("mars", 10, 10, 1, planetRepositoryMock);
-    Probe probe = TestUtils.givenGetValidProbe("mars roove", 0, 0, Direction.N, planet);
-    TestUtils.injectMultipleProbesInRepository(planet, planetRepositoryMock);
-    List<Command> listOfCommands = List.of(Command.L, Command.R, Command.M, Command.M);
-
-    assertThrows(
-        Exception.class,
-        () ->
-            underTest.createProbeNavigation(
-                ProbeSystemRequest.builder()
-                    .planet(planet)
-                    .probe(probe)
-                    .commands(listOfCommands)
-                    .build()));
-  }
-
-  @Test
   void createProbeNavigation_moveOutOfBounds_shouldMoveToPlanetLimit() throws Exception {
     Planet planet = TestUtils.givenGetValidPlanet("mars", 4, 4, 1, planetRepositoryMock);
     Probe probe = TestUtils.givenGetValidProbe("mars roove", 0, 0, Direction.N, planet);

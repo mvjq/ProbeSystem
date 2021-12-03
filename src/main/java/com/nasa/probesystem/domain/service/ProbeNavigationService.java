@@ -20,13 +20,13 @@ public class ProbeNavigationService {
 
   public ProbeSystemResponse createProbeNavigation(ProbeSystemRequest request) throws Exception {
     if (request.getProbe() == null
-        || request.getPlanet() == null
+        || request.getProbe().getPlanet() == null
         || request.getCommands() == null) {
       throw new Exception("Request is not in a valid format");
     }
 
     Probe probe = request.getProbe();
-    navigationService.navigate(request.getPlanet(), probe, request.getCommands());
+    navigationService.navigate(probe.getPlanet(), probe, request.getCommands());
     var response = ProbeSystemResponse.builder().planet(probe.getPlanet()).probe(probe).build();
     dataAccessService.saveProbe(probe);
     return response;

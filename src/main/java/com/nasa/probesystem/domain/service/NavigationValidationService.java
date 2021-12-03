@@ -2,7 +2,6 @@ package com.nasa.probesystem.domain.service;
 
 import com.nasa.probesystem.domain.model.Planet;
 import com.nasa.probesystem.domain.model.Probe;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -47,10 +46,7 @@ public class NavigationValidationService implements NavigationValidation {
     var validPlanet = dataAccessService.getPlanet(planet.getId()).getPlanet();
     if (validPlanet == null) return Boolean.FALSE;
 
-    var listProbes = dataAccessService.getProbesLandedInAPlanet(validPlanet.getId());
-    if (listProbes == null
-        || !validateCollisionProbes(probe, listProbes)
-        || !validateXandYOnPlanet(probe, planet)) {
+    if (!validateXandYOnPlanet(probe, planet)) {
       log.info("The probe {} cant move or land in the planet {}", probe, planet);
       return Boolean.FALSE;
     }
@@ -64,16 +60,6 @@ public class NavigationValidationService implements NavigationValidation {
         || -probe.getPositionY() < -planet.getMaxY()) {
       log.info("The probe {} coordinates are not valid in the planet {}", probe, planet);
       return Boolean.FALSE;
-    }
-    return Boolean.TRUE;
-  }
-
-  private Boolean validateCollisionProbes(Probe probe, List<Probe> listProbes) {
-    for (Probe probeOnPlanet : listProbes) {
-      if (!validateProbeCollision(probe, probeOnPlanet)) {
-        log.info("The new probe {} entered a colision with probe {} probeOnPlanet");
-        return Boolean.FALSE;
-      }
     }
     return Boolean.TRUE;
   }
