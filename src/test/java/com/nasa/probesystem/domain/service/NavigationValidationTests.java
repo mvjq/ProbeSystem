@@ -10,7 +10,6 @@ import com.nasa.probesystem.domain.model.Direction;
 import com.nasa.probesystem.domain.model.Planet;
 import com.nasa.probesystem.domain.model.Probe;
 import com.nasa.probesystem.repository.PlanetRepository;
-import com.nasa.probesystem.repository.ProbeRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;

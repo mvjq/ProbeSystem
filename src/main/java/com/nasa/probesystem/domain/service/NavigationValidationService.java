@@ -3,7 +3,6 @@ package com.nasa.probesystem.domain.service;
 import com.nasa.probesystem.domain.model.Planet;
 import com.nasa.probesystem.domain.model.Probe;
 import com.nasa.probesystem.repository.PlanetRepository;
-import com.nasa.probesystem.repository.ProbeRepository;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,8 +13,7 @@ public class NavigationValidationService implements NavigationValidation {
 
   private final PlanetRepository planetRepository;
 
-  public NavigationValidationService(
-      PlanetRepository planetRepository) {
+  public NavigationValidationService(PlanetRepository planetRepository) {
     this.planetRepository = planetRepository;
   }
 
