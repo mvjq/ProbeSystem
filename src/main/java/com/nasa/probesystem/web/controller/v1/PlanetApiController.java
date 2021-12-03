@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PlanetApiController implements PlanetApi {
 
   private final DataAccessService dataService;
-  
+
   public PlanetApiController(DataAccessService dataService) {
     this.dataService = dataService;
   }

@@ -1,6 +1,5 @@
 package com.nasa.probesystem.domain.service;
 
-import com.nasa.probesystem.domain.model.Planet;
 import com.nasa.probesystem.domain.model.Probe;
 import com.nasa.probesystem.domain.model.dto.ProbeSystemRequest;
 import com.nasa.probesystem.domain.model.dto.ProbeSystemResponse;
@@ -102,7 +101,7 @@ public class DataAccessService {
   public List<Probe> getProbesLandedInAPlanet(int planetId) {
     return planetRepository.findAllProbesById(planetId);
   }
-  
+
   public Probe saveProbe(Probe probe) {
     return probeRepository.saveAndFlush(probe);
   }

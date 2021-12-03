@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/probeNavigation")
-public class ProbeNavigationController implements ProbeNavigationApi {
+public class ProbeNavigationApiController implements ProbeNavigationApi {
 
   private final ProbeNavigationService probeNavigationService;
   private final DataAccessService dataAccessService;
 
-  public ProbeNavigationController(
+  public ProbeNavigationApiController(
       ProbeNavigationService probeNavigationService, DataAccessService dataAccessService) {
     this.probeNavigationService = probeNavigationService;
     this.dataAccessService = dataAccessService;
