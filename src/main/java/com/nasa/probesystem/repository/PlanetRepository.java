@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlanetRepository extends JpaRepository<Planet, Integer> {
 
-  List<Probe> findAllProbesByplanetId(int planetId);
+  List<Probe> findAllProbesById(int planetId);
 }

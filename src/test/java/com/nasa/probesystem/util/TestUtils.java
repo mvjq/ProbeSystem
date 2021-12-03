@@ -36,6 +36,6 @@ public class TestUtils {
             givenGetValidProbe("mars roover #1", 0, 0, Direction.N, planet),
             givenGetValidProbe("mars roover #2", 1, 2, Direction.N, planet),
             givenGetValidProbe("mars roover #3", 2, 2, Direction.N, planet));
-    when(repository.findAllProbesByplanetId(planet.getId())).thenReturn((listProbes));
+    when(repository.findAllProbesById(planet.getId())).thenReturn((listProbes));
   }
 }

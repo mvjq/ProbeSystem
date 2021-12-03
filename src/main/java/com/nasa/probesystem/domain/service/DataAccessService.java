@@ -100,7 +100,7 @@ public class DataAccessService {
   }
 
   public List<Probe> getProbesLandedInAPlanet(int planetId) {
-    return planetRepository.findAllProbesByplanetId(planetId);
+    return planetRepository.findAllProbesById(planetId);
   }
 
   public Planet savePlanet(Planet planet) {
