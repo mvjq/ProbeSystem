@@ -39,9 +39,9 @@ O sistema foi modelado da seguinte forma
 
 **Models**
 - Planet: objeto @Entity representa o objeto Planeta no nosso sistema.
-- Probe: objeto @Probe que representa o objeto Probe no nosso sistema.
-- Command: Enum que contém os comandos disponíveis
-- Direction: Enum que contém as direções disponíveis.
+- Probe: objeto @Entity que representa o objeto Sonda no nosso sistema.
+- Command: Enum que contém os comandos disponíveis: L, R ou M.
+- Direction: Enum que contém as direções disponíveis: N, S, E ou W.
 
 **Models/DTO**
 - ProbeSystemRequest: objeto intermediario que encapsula outros objetos e serve de entrada.
