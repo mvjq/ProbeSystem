@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/navigation")
+@RequestMapping("/api/v1/planet")
 public class PlanetApiController implements PlanetApi {
 
   private final DataAccessService dataService;
@@ -28,7 +28,7 @@ public class PlanetApiController implements PlanetApi {
   }
 
   @Override
-  @PostMapping(value = "/planet", consumes = "application/json", produces = "application/json")
+  @PostMapping(consumes = "application/json", produces = "application/json")
   public ResponseEntity<ProbeSystemResponse> createPlanet(@RequestBody ProbeSystemRequest request) {
     try {
       var created = dataService.savePlanet(request);
