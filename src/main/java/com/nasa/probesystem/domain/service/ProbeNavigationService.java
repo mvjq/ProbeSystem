@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class ProbeNavigationSystem {
+public class ProbeNavigationService {
   private final NavigationService navigationService;
   private final DataAccessService dataAccessService;
 
-  public ProbeNavigationSystem(
+  public ProbeNavigationService(
       NavigationService navigationService, DataAccessService dataAccessService) {
     this.navigationService = navigationService;
     this.dataAccessService = dataAccessService;

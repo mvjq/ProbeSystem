@@ -68,27 +68,6 @@ interface ProbeNavigationApi {
       })
   ResponseEntity<List<ProbeSystemResponse>> getAllProbes();
 
-  @Operation(
-      summary = "Updated a probe navigation system.",
-      description = "Updated a probe navigation system with new commands")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "OK",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ProbeSystemResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Object not found",
-            content = @Content(schema = @Schema(hidden = true)))
-      })
-  ResponseEntity<ProbeSystemResponse> updatedProbeNavigation(
-      int probeId, ProbeSystemRequest request);
-
   @Operation(summary = "Delete a probe", description = "Delete a probe by its id.")
   @ApiResponses(
       value = {
