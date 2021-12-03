@@ -1,0 +1,38 @@
+package com.nasa.probesystem.domain.service;
+
+import com.nasa.probesystem.domain.model.Probe;
+import com.nasa.probesystem.domain.model.dto.ProbeSystemRequest;
+import com.nasa.probesystem.domain.model.dto.ProbeSystemResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+public class ProbeNavigationSystem {
+  private final NavigationService navigationService;
+  private final DataAccessService dataAccessService;
+
+  public ProbeNavigationSystem(
+      NavigationService navigationService, DataAccessService dataAccessService) {
+    this.navigationService = navigationService;
+    this.dataAccessService = dataAccessService;
+  }
+
+  public ProbeSystemResponse createProbeNavigation(ProbeSystemRequest request) throws Exception {
+    if (request.getProbe() == null
+        || request.getPlanet() == null
+        || request.getCommands() == null) {
+      throw new Exception("Request is not in a valid format");
+    }
+
+    Probe probe = request.getProbe();
+    navigationService.navigate(request.getPlanet(), probe, request.getCommands());
+    var response = ProbeSystemResponse.builder().planet(probe.getPlanet()).probe(probe).build();
+    dataAccessService.saveProbe(probe);
+    return response;
+  }
+
+  public ProbeSystemResponse updatedProbeNavigation(int probeId, ProbeSystemRequest request) {
+    return null;
+  }
+}
