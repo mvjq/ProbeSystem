@@ -50,4 +50,3 @@ O sistema foi modelado da seguinte forma
 ##### Diagrama do Sistema
 
 ![Diagrama Probe System](./docs/images/ProbeSystem.jpg "Diagrama do ProbeSystem")
-2
