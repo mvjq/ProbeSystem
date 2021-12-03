@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PlanetApiController implements PlanetApi {
 
   private final DataAccessService dataService;
-
+  
   public PlanetApiController(DataAccessService dataService) {
     this.dataService = dataService;
   }
@@ -31,7 +31,7 @@ public class PlanetApiController implements PlanetApi {
   @PostMapping(value = "/planet", consumes = "application/json", produces = "application/json")
   public ResponseEntity<ProbeSystemResponse> createPlanet(@RequestBody ProbeSystemRequest request) {
     try {
-      var created = dataService.createPlanet(request);
+      var created = dataService.savePlanet(request);
       log.info("Created planet {}", created);
       return new ResponseEntity<>(created, HttpStatus.CREATED);
     } catch (Exception ex) {

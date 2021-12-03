@@ -25,7 +25,7 @@ public class DataAccessService {
   }
 
   @Transactional
-  public ProbeSystemResponse createPlanet(ProbeSystemRequest request) throws Exception {
+  public ProbeSystemResponse savePlanet(ProbeSystemRequest request) throws Exception {
     if (request.getPlanet() == null) {
       throw new Exception("Request is not in the right format");
     }
@@ -102,11 +102,7 @@ public class DataAccessService {
   public List<Probe> getProbesLandedInAPlanet(int planetId) {
     return planetRepository.findAllProbesById(planetId);
   }
-
-  public Planet savePlanet(Planet planet) {
-    return planetRepository.saveAndFlush(planet);
-  }
-
+  
   public Probe saveProbe(Probe probe) {
     return probeRepository.saveAndFlush(probe);
   }
